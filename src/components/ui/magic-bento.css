@@ -1,0 +1,96 @@
+.magic-card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.magic-bento-card {
+    position: relative;
+    min-width: 120px;
+    min-height: 60px;
+    flex: 0 1 auto;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(10px);
+}
+
+.magic-bento-card--border-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: radial-gradient(circle var(--glow-radius) at var(--glow-x) var(--glow-y),
+            rgba(var(--glow-color), calc(var(--glow-intensity) * 0.4)),
+            transparent);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.magic-bento-card__header {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+}
+
+.magic-bento-card__label {
+    font-size: 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.magic-bento-card__content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.magic-bento-card__title {
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.magic-bento-card:hover .magic-bento-card__title {
+    color: #fff;
+}
+
+.magic-bento-card__description {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 0.5rem;
+}
+
+.particle-container {
+    transform-style: preserve-3d;
+}
+
+.global-spotlight {
+    filter: blur(80px);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .magic-bento-card {
+        flex: 1 1 140px;
+        padding: 1.25rem;
+    }
+}

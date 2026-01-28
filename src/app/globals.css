@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --font-inter: var(--font-inter);
+  --font-outfit: var(--font-outfit);
+}
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.outfit {
+  font-family: var(--font-outfit), sans-serif;
+}
+
+/* Scrollbar Style */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #fff 0%, #888 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Prose Invert Styles for Rich Text */
+.prose-invert h1,
+.prose-invert h2,
+.prose-invert h3 {
+  color: #fff;
+  font-weight: 800;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose-invert p {
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.9) !important;
+  line-height: 1.8;
+}
+
+/* Force high contrast in editor */
+[contenteditable] {
+  color: white !important;
+}
+
+[contenteditable] * {
+  color: white !important;
+}
+
+[contenteditable] span {
+  color: inherit !important;
+  background-color: transparent !important;
+}
+
+.prose-invert ul {
+  list-style-type: disc !important;
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.prose-invert ol {
+  list-style-type: decimal !important;
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.prose-invert b,
+.prose-invert strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.prose-invert a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.prose-invert blockquote {
+  border-left: 4px solid #3b82f6;
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 2rem 0;
+}
+
+.prose-invert pre {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.prose-invert code {
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.3rem;
+  font-size: 0.9em;
+}
+
+/* ADMIN MODAL UX IMPROVEMENTS */
+.edit-popup-content label {
+  color: white !important;
+  opacity: 0.6;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.edit-popup-content input,
+.edit-popup-content select,
+.edit-popup-content textarea {
+  color: white !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+.edit-popup-content select option {
+  background: #111 !important;
+  color: white !important;
+}
+
+/* PrimeReact LiquidGlass Overrides */
+.p-datepicker {
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 2rem !important;
+  padding: 1rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  font-family: var(--font-outfit), sans-serif !important;
+  width: 100% !important;
+  max-width: 320px !important;
+}
+
+.p-datepicker-header {
+  padding: 0.5rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.p-monthpicker,
+.p-yearpicker {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 0.5rem !important;
+}
+
+.p-monthpicker-month,
+.p-yearpicker-year {
+  padding: 0.5rem !important;
+  border-radius: 0.75rem !important;
+  font-size: 0.8rem !important;
+  height: auto !important;
+}
+
+.p-datepicker .p-datepicker-title {
+  font-size: 0.9rem !important;
+}
+
+.p-datepicker .p-monthpicker-month:hover,
+.p-datepicker .p-yearpicker-year:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+}
+
+.p-datepicker .p-monthpicker-month.p-highlight,
+.p-datepicker .p-yearpicker-year.p-highlight {
+  background: #3b82f6 !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+.p-datepicker-group-container {
+  background: transparent !important;
+}
+
+.p-calendar input {
+  font-family: inherit !important;
+}
+
+.p-datepicker button {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.p-datepicker button:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+}
+
+/* Custom UI Utilities */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.4);
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.shadow-3xl {
+  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
+}
