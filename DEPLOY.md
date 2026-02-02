@@ -11,11 +11,8 @@ Bu projeyi internete taşıyıp herkesin görebileceği bir hale getirmek çok b
 ## 2. Kodları GitHub'a Yükleyin
 Eğer kodlar henüz GitHub'da değilse:
 1.  GitHub üzerinde yeni bir **Private (Gizli)** repo oluşturun.
-2.  Bilgisayarınızdaki proje klasöründe terminali açın ve şu komutları sırasıyla yazın:
+2.  Bilgisayarınızdaki proje klasöründe terminali açın ve şu komutları sırasıyla yazın (Sizin için `git init` ve `commit` işlemlerini zaten yaptım, sadece şunları girmeniz yeterli):
     ```bash
-    git init
-    git add .
-    git commit -m "ilk yayin"
     git branch -M main
     git remote add origin https://github.com/KULLANICI_ADINIZ/REPO_ADINIZ.git
     git push -u origin main

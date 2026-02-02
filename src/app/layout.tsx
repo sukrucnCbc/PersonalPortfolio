@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from "@/components/language-context";
 import { PrimeReactProvider } from "primereact/api";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // PrimeReact Styles
 import "primereact/resources/themes/lara-dark-blue/theme.css";
@@ -52,6 +53,7 @@ export default function RootLayout({
           <PrimeReactProvider>
             <LanguageProvider>
               {children}
+              <SpeedInsights />
             </LanguageProvider>
           </PrimeReactProvider>
         </ThemeProvider>

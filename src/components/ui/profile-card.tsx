@@ -67,7 +67,7 @@ export function ProfileCard() {
                     }}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
-                    className="relative w-96 rounded-[3rem] bg-zinc-900/40 p-3 backdrop-blur-3xl border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] animate-float pointer-events-auto"
+                    className="relative w-full max-w-[calc(100vw-3rem)] md:w-96 rounded-[3rem] bg-zinc-900/40 p-3 backdrop-blur-3xl border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.5)] animate-float pointer-events-auto"
                 >
                     <div
                         style={{

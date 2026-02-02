@@ -8,8 +8,15 @@ import { NavBar } from "@/components/ui/tubelight-navbar";
 export function Navbar() {
     const { language, setLanguage, t } = useLanguage();
     const [mounted, setMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
-    useEffect(() => setMounted(true), []);
+    useEffect(() => {
+        setMounted(true);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     if (!mounted) return null;
 
@@ -17,9 +24,12 @@ export function Navbar() {
         { name: t("nav_welcome"), url: "#home", icon: Home },
         { name: t("nav_career"), url: "#career", icon: Briefcase },
         { name: t("nav_blog"), url: "#blog", icon: BookOpen },
+        // Mobile: Remove both Projects and Achievements
+        // Desktop: Keep Projects but point to Achievements section
+        !isMobile && { name: t("nav_projects"), url: "#achievements", icon: Zap },
         { name: t("nav_whoami"), url: "#about", icon: User },
         { name: t("nav_contact"), url: "#contact", icon: Mail },
-    ];
+    ].filter(Boolean) as any[];
 
     const languageSwitcher = (
         <button

@@ -56,6 +56,37 @@ body {
   transition: all 0.3s ease;
 }
 
+.liquid-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+  animation: liquid-drift 10s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes liquid-drift {
+  from {
+    transform: translate(-10%, -10%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(10%, 10%) rotate(5deg);
+  }
+}
+
 .gradient-text {
   background: linear-gradient(135deg, #fff 0%, #888 100%);
   -webkit-background-clip: text;

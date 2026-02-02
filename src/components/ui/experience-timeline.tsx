@@ -31,11 +31,12 @@ export function ExperienceTimeline() {
 
     const [activeId, setActiveId] = useState<string | null>(null);
 
+    // Initialize activeId only once on mount to avoid fighting manual toggles
     useEffect(() => {
-        if (!activeId && experiences.length > 0) {
+        if (experiences.length > 0) {
             setActiveId(experiences[0].id);
         }
-    }, [experiences, activeId]);
+    }, []); // Empty dependency array means this only runs once on load
 
     const experienceFields: any[] = [
         { key: "company", label: "Şirket", type: "text" },
@@ -198,7 +199,8 @@ export function ExperienceTimeline() {
                 </div>
 
                 <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 md:gap-20">
-                    <div className="relative">
+                    {/* DESKTOP SIDEBAR (Hidden on Mobile) */}
+                    <div className="relative hidden lg:block">
                         <div className="absolute left-4 top-0 bottom-24 w-[1px] bg-white/10" />
                         <div className="absolute left-4 top-0 bottom-24 w-[1px] bg-blue-500 z-10" />
                         <div className="flex flex-col gap-12 relative z-20">
@@ -219,7 +221,106 @@ export function ExperienceTimeline() {
                         </div>
                     </div>
 
-                    <div className="relative">
+                    {/* MOBILE ACCORDION (Visible only on Mobile) */}
+                    <div className="relative lg:hidden">
+                        <div className="absolute left-4 top-0 bottom-10 w-[1px] bg-white/10" />
+                        <div className="absolute left-4 top-0 bottom-10 w-[1px] bg-blue-500 z-10" />
+                        <div className="flex flex-col gap-6 relative z-20">
+                            {experiences.map((exp: any) => (
+                                <div key={exp.id} className="relative pl-12">
+                                    {/* Timeline Dot */}
+                                    <div className={`absolute left-[10px] top-2 w-[13px] h-[13px] rounded-full border-2 transition-all duration-500 z-30 ${activeId === exp.id ? "bg-blue-500 border-blue-400 scale-125 shadow-[0_0_10px_rgba(59,130,246,0.8)]" : "bg-black border-white/20"}`} />
+
+                                    {/* Header (Clickable part) */}
+                                    <div
+                                        className="flex items-center justify-between group cursor-pointer py-2"
+                                        onClick={() => setActiveId(activeId === exp.id ? null : exp.id)}
+                                    >
+                                        <div className="space-y-1 flex-1">
+                                            <span className="text-[9px] font-black tracking-widest text-blue-500 uppercase">{formatYear(exp)}</span>
+                                            <h3 className="text-lg font-black outfit uppercase group-hover:text-blue-400 transition-colors tracking-tighter leading-tight text-white">{exp.role}</h3>
+                                            <p className="text-white/50 text-[9px] font-bold uppercase tracking-wider">{exp.company}</p>
+                                        </div>
+                                        <motion.div
+                                            animate={{ rotate: activeId === exp.id ? 90 : 0 }}
+                                            className="ml-4 w-10 h-10 flex items-center justify-center bg-white/5 rounded-full text-blue-400 border border-white/10 shadow-lg"
+                                        >
+                                            <ChevronRight size={14} />
+                                        </motion.div>
+                                    </div>
+
+                                    {/* Collapsible Content */}
+                                    <AnimatePresence>
+                                        {activeId === exp.id && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: "auto", opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                                                className="overflow-hidden mt-4"
+                                            >
+                                                <Editable
+                                                    translationKey={`career_list.${exp.id}`}
+                                                    fields={experienceFields}
+                                                    onDelete={() => {
+                                                        removeItem("career_list", exp._originalIndex);
+                                                        setActiveId(null);
+                                                    }}
+                                                    className="w-full pb-4"
+                                                >
+                                                    <div className="glass p-7 rounded-[2.5rem] border border-white/10 relative overflow-hidden flex flex-col group/card bg-white/[0.02]">
+                                                        {/* Aurora Spotlight Effect */}
+                                                        <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-[radial-gradient(circle_at_100%_0%,rgba(59,130,246,0.15)_0%,rgba(255,255,255,0.03)_40%,transparent_70%)] blur-[70px] opacity-100 pointer-events-none z-0" />
+
+                                                        {exp.logo && (
+                                                            <div className="mb-5">
+                                                                <div className="relative w-10 h-10 flex items-center justify-center">
+                                                                    <div className="absolute inset-0 bg-blue-500/5 blur-[12px] rounded-full" />
+                                                                    <img
+                                                                        src={exp.logo}
+                                                                        className="relative z-10 w-full h-full object-contain filter drop-shadow-xl opacity-80"
+                                                                        alt={exp.company}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        <div className="relative z-10 space-y-5">
+                                                            <div
+                                                                className="prose prose-invert max-w-none text-white/60 font-medium text-[0.85rem] leading-relaxed outfit"
+                                                                style={{
+                                                                    fontSize: exp.fontSize ? `calc(${exp.fontSize} * 0.85)` : '0.85rem',
+                                                                    lineHeight: '1.6'
+                                                                }}
+                                                                dangerouslySetInnerHTML={{ __html: normalizeDescription(exp.desc) }}
+                                                            />
+
+                                                            <div className="pt-2">
+                                                                <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5">
+                                                                    <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                                                                        <Wrench size={14} />
+                                                                    </div>
+                                                                    <div className="flex flex-col">
+                                                                        <span className="text-[7px] font-black text-blue-400/50 uppercase tracking-[0.3em]">TECH STACK</span>
+                                                                        <p className="text-[9px] text-white/40 font-bold leading-tight tracking-wide">
+                                                                            {exp.footerInfo || t("career_details_footer")}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Editable>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* DESKTOP CONTENT VIEW (Hidden on Mobile) */}
+                    <div className="relative hidden lg:block">
                         {currentExperience && (
                             <div className="h-full transition-opacity duration-300">
                                 <Editable

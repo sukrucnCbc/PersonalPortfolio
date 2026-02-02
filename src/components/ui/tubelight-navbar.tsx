@@ -89,7 +89,7 @@ export function NavBar({ items, className, extraContent, language }: NavBarProps
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -100, opacity: 0 }}
                     className={cn(
-                        "fixed top-0 left-1/2 -translate-x-1/2 z-40 pt-8 w-fit",
+                        "fixed top-0 left-1/2 -translate-x-1/2 z-40 pt-8 w-fit shrink-0",
                         className,
                     )}
                 >
@@ -102,7 +102,13 @@ export function NavBar({ items, className, extraContent, language }: NavBarProps
                                 <Link
                                     key={item.name}
                                     href={item.url}
-                                    onClick={() => setActiveTab(item.name)}
+                                    onClick={(e) => {
+                                        setActiveTab(item.name);
+                                        if (item.url === "#home") {
+                                            e.preventDefault();
+                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        }
+                                    }}
                                     className={cn(
                                         "relative cursor-pointer text-[10px] md:text-[11px] font-bold tracking-[0.1em] uppercase px-4 md:px-5 py-2.5 rounded-full transition-all duration-300 flex items-center justify-center min-w-[60px] md:min-w-[100px]",
                                         "text-white/50 hover:text-white",

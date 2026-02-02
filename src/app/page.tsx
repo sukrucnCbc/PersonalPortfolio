@@ -14,10 +14,101 @@ import { AdminLogin } from "@/components/admin-login";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Box, Zap, Mail, Linkedin } from "lucide-react";
+import { X, Box, Zap, Mail, Linkedin, ChevronRight } from "lucide-react";
 import { FlashlightEffect, StageLight } from "@/components/ui/flashlight-effect";
 import MagicBento from "@/components/ui/magic-bento";
 import Aurora from "@/components/ui/Aurora";
+
+function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t: any }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      {/* Desktop View & Mobile Header */}
+      <div
+        className={`liquid-glass p-4 md:p-8 rounded-[2rem] border border-white/5 hover:border-blue-500/30 transition-all group relative overflow-hidden flex flex-row items-center gap-4 md:gap-6 cursor-pointer md:cursor-default shadow-lg hover:shadow-blue-500/5`}
+        onClick={() => {
+          if (window.innerWidth < 768) setIsOpen(!isOpen);
+        }}
+      >
+        {/* Glow effect on hover */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full pointer-events-none group-hover:bg-blue-500/15 transition-all" />
+
+        <div className="flex-shrink-0 w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-zinc-900 border border-white/10 overflow-hidden group-hover:border-blue-500/40 transition-all relative shadow-2xl z-10">
+          <img
+            src={ach.image || "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=100&q=80"}
+            className="w-full h-full object-cover transition-all duration-700 scale-100 group-hover:scale-115"
+            alt={ach.title}
+          />
+          {/* Inner Light Radiance */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:to-blue-500/30 transition-all duration-500" />
+        </div>
+
+        <div className="flex-1 flex flex-col relative z-10 min-w-0">
+          <div className="flex items-center justify-between w-full">
+            <h3 className="text-[12px] md:text-xl font-black outfit uppercase tracking-normal text-white group-hover:text-blue-400 transition-colors truncate pr-2">
+              {ach.title}
+            </h3>
+
+            {/* Mobile Toggle Arrow */}
+            <motion.div
+              animate={{ rotate: isOpen ? 90 : 0 }}
+              className="md:hidden w-8 h-8 flex items-center justify-center bg-white/5 rounded-full text-blue-400 border border-white/10"
+            >
+              <ChevronRight size={14} />
+            </motion.div>
+          </div>
+
+          {/* Desktop Description */}
+          <div className="hidden md:block">
+            <Editable
+              translationKey={`achievements_list.${ach.id}`}
+              fields={[
+                { key: "title", label: "Başarı Başlığı", type: "text" },
+                { key: "desc", label: "Kısa Açıklama", type: "text" },
+                { key: "image", label: "İkon / Görsel", type: "image" }
+              ]}
+              onDelete={() => removeItem("achievements_list", ach._originalIndex)}
+            >
+              <p className="text-sm md:text-base text-white/50 leading-relaxed font-medium">
+                {ach.desc}
+              </p>
+            </Editable>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Collapsible Body */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="md:hidden overflow-hidden"
+          >
+            <div className="p-6 pt-2 border-x border-b border-white/5 rounded-b-[2rem] bg-white/[0.01] relative z-0 -mt-4">
+              <Editable
+                translationKey={`achievements_list.${ach.id}`}
+                fields={[
+                  { key: "title", label: "Başarı Başlığı", type: "text" },
+                  { key: "desc", label: "Kısa Açıklama", type: "text" },
+                  { key: "image", label: "İkon / Görsel", type: "image" }
+                ]}
+                onDelete={() => removeItem("achievements_list", ach._originalIndex)}
+              >
+                <p className="text-sm text-white/50 leading-relaxed font-medium">
+                  {ach.desc}
+                </p>
+              </Editable>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 
 // Scroll Float Effect Wrapper - ANIMATIONS DISABLED FOR STABILITY
 const FloatSection = ({ children, id, className = "" }: { children: React.ReactNode, id?: string, className?: string }) => {
@@ -120,13 +211,58 @@ export default function Home() {
 
         <HeartbeatDivider />
 
+        <FloatSection id="achievements" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5 bg-gradient-to-b from-black to-blue-500/[0.02]">
+          <div className="px-4 md:px-10">
+            <div className="flex flex-col gap-4 mb-20">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <Editable translationKey="achievements_title" className="w-auto">
+                  <h2 className="text-4xl md:text-6xl font-black outfit uppercase tracking-tighter text-white leading-none">
+                    {t("achievements_title")}
+                  </h2>
+                </Editable>
+                {isAdmin && (
+                  <button
+                    onClick={() => addItem("achievements_list", { title: "Yeni Başarı", desc: "Başarı detayı...", image: "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=100&q=80" })}
+                    className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2"
+                  >
+                    + BAŞARI EKLE
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="max-w-4xl mx-auto space-y-6">
+              {(() => {
+                const achievementsData = t("achievements_list");
+                const achievements = Array.isArray(achievementsData)
+                  ? achievementsData.map((a: any, idx: number) => ({ ...a, id: a.id || `ach-${idx}`, _originalIndex: idx }))
+                  : [];
+
+                return (
+                  <div className="space-y-6">
+                    {achievements.map((ach: any) => (
+                      <AchievementCard
+                        key={ach.id}
+                        ach={ach}
+                        removeItem={removeItem}
+                        t={t}
+                      />
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </FloatSection>
+
+        <HeartbeatDivider />
+
         <FloatSection id="projects" className="py-16 px-6 max-w-7xl mx-auto border-t border-white/5 bg-gradient-to-b from-black to-blue-500/[0.02]">
           <div className="px-4 md:px-10">
-            <div className="flex items-center gap-4 mb-20">
-              <div className="w-12 h-[1px] bg-blue-500/30" />
-              <Editable translationKey="projects_awards_title">
-                <h2 className="text-3xl md:text-5xl font-black outfit uppercase tracking-tighter text-white">
-                  {t("projects_awards_title")}
+            <div className="mb-16">
+              <Editable translationKey="projects_title">
+                <h2 className="text-4xl md:text-6xl font-black outfit uppercase tracking-tighter text-white leading-none">
+                  {t("projects_title")}
                 </h2>
               </Editable>
             </div>
@@ -134,32 +270,30 @@ export default function Home() {
             <div className="relative">
               <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-600/5 blur-[120px] rounded-full pointer-events-none" />
 
-              <div className="glass p-10 md:p-16 rounded-[3rem] border border-white/5 relative overflow-hidden group/list bg-white/[0.01] max-w-5xl shadow-3xl transition-all duration-700 hover:bg-white/[0.02]">
-                {/* Persistent Aurora Spotlight in Corner (Same as Experience Card) */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_100%_0%,rgba(59,130,246,0.2)_0%,rgba(255,255,255,0.05)_40%,transparent_70%)] blur-[100px] opacity-100 pointer-events-none z-0" />
-                <div className="absolute -top-24 -right-24 w-[350px] h-[350px] bg-blue-400/10 blur-[80px] rounded-full mix-blend-screen opacity-100 pointer-events-none z-0" />
+              <div className="glass p-8 md:p-12 rounded-[2.5rem] border border-white/5 relative overflow-hidden group/list bg-white/[0.01] max-w-3xl shadow-3xl transition-all duration-700 hover:bg-white/[0.02]">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at(100%_0%,rgba(59,130,246,0.15)_0%,rgba(255,255,255,0.05)_40%,transparent_70%)] blur-[100px] opacity-100 pointer-events-none z-0" />
 
-                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-blue-500/[0.02] to-transparent pointer-events-none" />
+                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-blue-500/[0.01] to-transparent pointer-events-none" />
 
                 <div className="relative z-10">
                   <Editable
-                    translationKey="projects_awards_content"
+                    translationKey="projects_content"
                     type="rich-text"
                   >
                     {(() => {
-                      const projectData = t("projects_awards_content");
-                      const htmlContent = projectData?.projects_awards_content || projectData || "";
+                      const projectData = t("projects_content");
+                      const htmlContent = projectData?.projects_content || projectData || "";
 
                       return (
                         <div
-                          className="prose prose-invert prose-blue max-w-none
-                                     text-white/60 font-medium leading-[1.7] text-sm
-                                     prose-blockquote:text-xl md:prose-blockquote:text-2xl prose-blockquote:text-white prose-blockquote:font-black prose-blockquote:itallic prose-blockquote:tracking-tighter prose-blockquote:leading-[1.2] prose-blockquote:border-l-4 prose-blockquote:border-l-blue-500 prose-blockquote:pl-8 prose-blockquote:py-2 prose-blockquote:my-12
-                                     prose-ul:list-none prose-ul:p-0 prose-ul:mt-8
-                                     prose-li:relative prose-li:pl-8 prose-li:mb-4
-                                     prose-li:before:content-[''] prose-li:before:absolute prose-li:before:left-0 prose-li:before:top-[0.7em]
+                          className="prose prose-invert prose-blue max-w-none outfit
+                                     text-white/70 font-medium leading-relaxed text-sm md:text-[15px]
+                                     prose-blockquote:text-lg md:prose-blockquote:text-xl prose-blockquote:text-white prose-blockquote:font-black prose-blockquote:italic prose-blockquote:tracking-tighter prose-blockquote:leading-snug prose-blockquote:border-l-4 prose-blockquote:border-l-blue-500 prose-blockquote:pl-6 prose-blockquote:py-1 prose-blockquote:my-8
+                                     prose-ul:list-none prose-ul:p-0 prose-ul:mt-4
+                                     prose-li:relative prose-li:pl-7 prose-li:mb-4
+                                     prose-li:before:content-[''] prose-li:before:absolute prose-li:before:left-0 prose-li:before:top-[0.65em]
                                      prose-li:before:w-1.5 prose-li:before:h-1.5 prose-li:before:bg-blue-500/50 prose-li:before:rounded-full
-                                     prose-p:mb-4 prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline"
+                                     prose-p:mb-4 prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline tracking-wide"
                           dangerouslySetInnerHTML={{ __html: htmlContent }}
                         />
                       );
@@ -173,18 +307,13 @@ export default function Home() {
 
         <HeartbeatDivider />
 
-        <FloatSection id="blog" className="">
-          <div className="container mx-auto px-4 py-16">
-            <div className="space-y-4 mb-16 text-left">
+        <FloatSection id="blog" className="py-16 px-6">
+          <div className="max-w-7xl mx-auto px-4 md:px-10">
+            <div className="mb-16 text-left">
               <Editable translationKey="blog_heading" type="text">
-                <h2 className="text-5xl md:text-7xl font-black outfit uppercase tracking-tighter text-white leading-[0.9]">
+                <h2 className="text-4xl md:text-6xl font-black outfit uppercase tracking-tighter text-white leading-none">
                   {t("blog_heading")}
                 </h2>
-              </Editable>
-              <Editable translationKey="blog_subheading" type="text">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">
-                  {t("blog_subheading")}
-                </p>
               </Editable>
             </div>
 
@@ -290,12 +419,12 @@ export default function Home() {
                   </Editable>
                 </div>
 
-                <div className="flex flex-col gap-12">
+                <div className="flex flex-col gap-10">
                   <Editable translationKey="about_text" type="rich-text">
                     <div
-                      className="prose prose-invert prose-lg max-w-none text-white/50 leading-relaxed font-medium
-                                prose-strong:text-white prose-strong:font-black
-                                prose-p:mb-6"
+                      className="prose prose-invert prose-lg max-w-none text-white/70 leading-[1.8] font-medium outfit
+                                prose-strong:text-blue-400 prose-strong:font-black
+                                prose-p:mb-8 text-base md:text-lg tracking-wide"
                       dangerouslySetInnerHTML={{ __html: t("about_text") || t("about_content") }}
                     />
                   </Editable>
@@ -303,19 +432,22 @@ export default function Home() {
               </div>
 
               <div className="relative flex justify-center lg:justify-end">
-                <div className="w-full max-w-md aspect-square relative group">
-                  <div className="absolute inset-0 bg-blue-600/10 blur-[100px] rounded-full group-hover:bg-blue-600/20 transition-all" />
-                  <div className="relative w-full h-full rounded-[4rem] border border-white/10 overflow-hidden glass p-4 transform lg:rotate-3 hover:rotate-0 transition-all duration-700 shadow-3xl">
-                    <div className="w-full h-full rounded-[3rem] overflow-hidden bg-zinc-900 border border-white/5">
+                <div className="w-full max-w-[320px] aspect-[4/5] relative group">
+                  <div className="absolute inset-0 bg-blue-600/20 blur-[80px] rounded-full group-hover:bg-blue-600/40 transition-all duration-1000 opacity-50" />
+                  <div className="relative w-full h-full rounded-[2.5rem] border border-white/10 overflow-hidden glass p-3 transform group-hover:scale-[1.02] group-hover:-rotate-1 transition-all duration-700 shadow-3xl">
+                    <div className="w-full h-full rounded-[1.8rem] overflow-hidden bg-zinc-900 border border-white/5 relative">
                       <Editable translationKey="about_image" type="image">
                         <img
                           src={t("about_image")}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
                           alt={t("profile_card.name")}
                         />
                       </Editable>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
                     </div>
                   </div>
+                  {/* Outer Floating Element for extra "class" */}
+                  <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-blue-500/10 backdrop-blur-xl border border-white/10 rounded-3xl -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700" />
                 </div>
               </div>
             </div>

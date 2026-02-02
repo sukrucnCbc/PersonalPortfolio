@@ -8,6 +8,7 @@ const translations = {
         nav_career: "Kariyer",
         nav_blog: "Blog",
         nav_projects: "Projeler",
+        nav_achievements: "Başarılar",
         nav_whoami: "Ben Kimim?",
         nav_contact: "İletişim",
         career_title: "Mesleki Yolculuğum",
@@ -20,8 +21,10 @@ const translations = {
         blog_title: "Blog Yazılarım",
         blog_link: "Detayları Gör",
         blog_list: [],
-        projects_awards_title: "Projeler ve Ödüller",
-        projects_awards_content: "<ul><li>Önemli Proje 1</li><li>Başarı / Ödül 1</li></ul>",
+        projects_title: "Projeler",
+        projects_content: "<ul><li>Önemli Proje 1</li></ul>",
+        achievements_title: "Başarılar",
+        achievements_list: [],
         social: {
             linkedin: "",
             github: "",
@@ -52,6 +55,7 @@ const translations = {
         nav_career: "Career",
         nav_blog: "Blog",
         nav_projects: "Projects",
+        nav_achievements: "Achievements",
         nav_whoami: "Who am I?",
         nav_contact: "Contact",
         career_title: "Professional Journey",
@@ -64,8 +68,10 @@ const translations = {
         blog_title: "My Blog Posts",
         blog_link: "View Details",
         blog_list: [],
-        projects_awards_title: "Projects & Awards",
-        projects_awards_content: "<ul><li>Major Project 1</li><li>Achievement / Award 1</li></ul>",
+        projects_title: "Projects",
+        projects_content: "<ul><li>Major Project 1</li></ul>",
+        achievements_title: "Achievements",
+        achievements_list: [],
         social: {
             linkedin: "",
             github: "",
@@ -161,20 +167,27 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
                 body: JSON.stringify(newContent)
             });
 
-            if (res.ok) {
-                // Success
-            } else {
-                console.error("Save failed");
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                console.error("Save failed:", res.status, errData);
+                throw new Error(errData.error || "Sunucuya kaydedilemedi.");
             }
-        } catch (err) {
+            console.log("Successfully saved to server.");
+        } catch (err: any) {
             console.error("Network error during save", err);
+            alert("Değişiklikler sunucuya kaydedilemedi: " + err.message);
+            // Optionally rollback state here, but optimistic is often better for UX
+            // provided the user knows it failed.
         } finally {
             isSaving.current = false;
         }
     };
 
     const updateContent = async (key: string, value: any) => {
-        if (!contentRef.current) return;
+        if (!contentRef.current) {
+            console.error("updateContent called before content loaded");
+            return;
+        }
 
         const newContent = JSON.parse(JSON.stringify(contentRef.current));
         const keys = key.split(".");
@@ -187,7 +200,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
                 const nextKey = keys[i + 1];
 
                 if (i === keys.length - 2) {
-                    const itemIdx = obj[k].findIndex((it: any) => it && String(it.id) === nextKey);
+                    const itemIdx = obj[k].findIndex((it: any) => it && String(it.id) === String(nextKey));
                     if (itemIdx !== -1) {
                         if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
                             obj[k][itemIdx] = { ...obj[k][itemIdx], ...value };
@@ -196,19 +209,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
                         }
                     } else {
                         const idx = parseInt(nextKey, 10);
-                        if (!isNaN(idx)) {
+                        if (!isNaN(idx) && obj[k][idx] !== undefined) {
                             obj[k][idx] = value;
                         } else {
+                            console.warn("Item not found by ID or index, adding as property:", nextKey);
                             (obj[k] as any)[nextKey] = value;
                         }
                     }
                     contentRef.current = newContent;
-                    setContent(newContent);
+                    setContent({ ...newContent });
                     await saveToServer(newContent);
                     return;
                 }
 
-                const item = obj[k].find((it: any) => it && String(it.id) === nextKey);
+                const item = obj[k].find((it: any) => it && String(it.id) === String(nextKey));
                 if (item) {
                     obj = item;
                     i++;
@@ -230,12 +244,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         obj[finalKey] = value;
 
         contentRef.current = newContent;
-        setContent(newContent);
+        setContent({ ...newContent });
         await saveToServer(newContent);
     };
 
     const addItem = async (arrayKey: string, item: any) => {
-        if (!contentRef.current) return;
+        if (!contentRef.current) {
+            console.error("addItem called before content loaded");
+            return;
+        }
 
         const newContent = JSON.parse(JSON.stringify(contentRef.current));
         const keys = arrayKey.split(".");
@@ -244,20 +261,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             if (!obj[keys[i]]) obj[keys[i]] = {};
             obj = obj[keys[i]];
         }
-        if (!Array.isArray(obj[keys[keys.length - 1]])) {
-            obj[keys[keys.length - 1]] = [];
+
+        const lastKey = keys[keys.length - 1];
+        if (!Array.isArray(obj[lastKey])) {
+            obj[lastKey] = [];
         }
 
         const itemToAdd = (typeof item === 'object' && item !== null)
-            ? { ...item, id: item.id || Date.now().toString() }
+            ? { ...item, id: (item.id || Date.now() + Math.floor(Math.random() * 1000)).toString() }
             : item;
 
-        obj[keys[keys.length - 1]].push(itemToAdd);
+        obj[lastKey].push(itemToAdd);
 
-        // Optimistic update
         contentRef.current = newContent;
-        setContent(newContent);
-
+        setContent({ ...newContent });
         await saveToServer(newContent);
     };
 
@@ -268,16 +285,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         const keys = arrayKey.split(".");
         let obj = newContent[language];
         for (let i = 0; i < keys.length - 1; i++) {
+            if (!obj[keys[i]]) obj[keys[i]] = {};
             obj = obj[keys[i]];
         }
-        if (Array.isArray(obj[keys[keys.length - 1]])) {
-            obj[keys[keys.length - 1]].splice(index, 1);
+
+        const lastKey = keys[keys.length - 1];
+        if (Array.isArray(obj[lastKey])) {
+            obj[lastKey].splice(index, 1);
         }
 
-        // Optimistic update
         contentRef.current = newContent;
-        setContent(newContent);
-
+        setContent({ ...newContent });
         await saveToServer(newContent);
     };
 
@@ -297,7 +315,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
                 // Handle Array ID lookups
                 if (Array.isArray(result)) {
-                    const item = result.find((it: any) => it && String(it.id) === k);
+                    const item = result.find((it: any) => it && String(it.id) === String(k));
                     if (item) {
                         result = item;
                         continue;

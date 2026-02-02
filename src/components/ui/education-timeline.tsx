@@ -20,7 +20,7 @@ export function EducationTimeline() {
     })).sort((a, b) => {
         const dateA = a.startDate || "";
         const dateB = b.startDate || "";
-        return dateB.localeCompare(dateA);
+        return dateA.localeCompare(dateB); // Newest at the bottom
     });
 
     const fields: any[] = [
@@ -45,23 +45,18 @@ export function EducationTimeline() {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-10 relative z-20">
-                <div className="flex flex-col gap-6 mb-24">
-                    <div className="flex items-center justify-between">
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500">
-                                    <GraduationCap size={20} />
-                                </div>
-                                <span className="text-blue-400 text-[10px] font-black tracking-[0.6em] uppercase">
-                                    {language === 'tr' ? 'AKADEMİK GEÇMİŞ' : 'ACADEMIC BACKGROUND'}
-                                </span>
-                            </div>
-                            <Editable translationKey="education_title">
-                                <h2 className="text-5xl md:text-7xl font-black outfit uppercase tracking-tighter text-white leading-none">
-                                    {t("education_title") || (language === 'tr' ? 'Eğitim' : 'Education')}
-                                </h2>
-                            </Editable>
-                        </div>
+                <div className="flex flex-col gap-4 mb-24">
+                    <Editable translationKey="nav_education">
+                        <span className="text-white/50 text-[10px] font-black tracking-[0.4em] uppercase">
+                            {language === 'tr' ? 'AKADEMİK GEÇMİŞ' : 'ACADEMIC BACKGROUND'}
+                        </span>
+                    </Editable>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <Editable translationKey="education_title" className="w-auto">
+                            <h2 className="text-4xl md:text-6xl font-black outfit uppercase tracking-tighter text-white leading-none">
+                                {t("education_title") || (language === 'tr' ? 'Eğitim' : 'Education')}
+                            </h2>
+                        </Editable>
 
                         {isAdmin && (
                             <button
@@ -69,17 +64,55 @@ export function EducationTimeline() {
                                     const newId = Date.now().toString();
                                     await addItem("education_list", { id: newId, school: "Yeni Okul", degree: "Bölüm", logo: "", startDate: "2020", endDate: "" });
                                 }}
-                                className="group p-4 bg-white/5 hover:bg-blue-500 text-white/50 hover:text-white rounded-2xl transition-all border border-white/10 hover:border-blue-500/50 shadow-xl"
+                                className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2"
                             >
-                                <Plus size={24} className="group-hover:rotate-90 transition-transform duration-500" />
+                                <Plus size={14} />
+                                {language === 'tr' ? 'EĞİTİM EKLE' : 'ADD EDUCATION'}
                             </button>
                         )}
                     </div>
                 </div>
 
-                {/* Horizontal Timeline Container */}
-                <div className="relative">
-                    {/* Continuous Line with Glow */}
+                {/* MOBILE VIEW: Vertical Timeline (Visible only on Mobile) */}
+                <div className="lg:hidden relative">
+                    <div className="absolute left-4 top-0 bottom-10 w-[1px] bg-white/10" />
+                    <div className="absolute left-4 top-0 bottom-10 w-[1px] bg-blue-500/30" />
+
+                    <div className="flex flex-col gap-8 relative z-10">
+                        {items.map((item: any, idx: number) => (
+                            <div key={item.id} className="relative pl-12">
+                                <div className="absolute left-[10px] top-2 w-[13px] h-[13px] rounded-full bg-black border-2 border-blue-500/50 z-20" />
+                                <Editable
+                                    translationKey={`education_list.${item.id}`}
+                                    fields={fields}
+                                    onDelete={() => removeItem("education_list", item._originalIndex)}
+                                >
+                                    <div className="glass-effect p-6 rounded-[2.5rem] border border-white/10 bg-white/[0.01] relative overflow-hidden">
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex items-center gap-2">
+                                                <Calendar size={10} className="text-blue-400" />
+                                                <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest">
+                                                    {formatYear(item)}
+                                                </span>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <h3 className="text-lg font-black text-white uppercase tracking-tighter leading-tight">
+                                                    {item.school}
+                                                </h3>
+                                                <div className="flex items-center gap-2 text-white/40">
+                                                    <span className="text-[8px] font-bold uppercase tracking-widest">{item.degree}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Editable>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* DESKTOP VIEW: Horizontal Timeline (Visible only on Desktop) */}
+                <div className="hidden lg:block relative">
                     <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent pointer-events-none" />
 
                     <div
@@ -106,14 +139,9 @@ export function EducationTimeline() {
                                         transition={{ delay: idx * 0.1 }}
                                         className="relative group/edu"
                                     >
-                                        {/* Timeline Node Connector */}
                                         <div className="absolute top-1/2 -translate-y-1/2 -left-5 w-10 h-[2px] bg-blue-500/20 z-0" />
-
-                                        {/* Card */}
                                         <div className="glass-effect p-8 rounded-[3rem] border border-white/10 bg-white/[0.01] hover:bg-white/[0.03] transition-all duration-700 relative overflow-hidden group-hover/edu:scale-[1.02] shadow-2xl">
-                                            {/* Reflective Sweep */}
                                             <div className="absolute inset-0 translate-x-[-100%] group-hover/edu:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12" />
-
                                             <div className="relative z-10 space-y-8">
                                                 <div className="flex items-start justify-between">
                                                     <div className="flex flex-col gap-4">
@@ -128,7 +156,6 @@ export function EducationTimeline() {
                                                         </h3>
                                                     </div>
                                                 </div>
-
                                                 <div className="space-y-4">
                                                     <div className="h-[1px] w-full bg-gradient-to-r from-white/10 to-transparent" />
                                                     <div className="flex flex-col gap-2">
@@ -141,8 +168,6 @@ export function EducationTimeline() {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {/* Bottom Tech Detail */}
                                             <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 to-emerald-500/50 opacity-0 group-hover/edu:opacity-100 transition-opacity duration-700" />
                                         </div>
                                     </motion.div>

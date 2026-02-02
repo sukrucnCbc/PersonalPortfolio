@@ -102,7 +102,7 @@ export default function PremiumHero({
         }));
 
     return (
-        <div lang={language} className="relative min-h-screen w-full flex items-start justify-start overflow-hidden bg-black pt-20 pb-20 md:pt-32 font-outfit">
+        <div lang={language} className="relative min-h-screen w-full flex items-start justify-start overflow-hidden bg-black pt-32 pb-20 md:pt-40 font-outfit">
             <div className="absolute inset-0 z-0">
                 <Canvas camera={{ position: [0, 0, 1] }}>
                     <ShaderPlane />
@@ -111,30 +111,45 @@ export default function PremiumHero({
 
             <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-16 pointer-events-none">
                 <div className="flex flex-col lg:flex-row items-start justify-between gap-16 pointer-events-auto">
-                    <div className="flex flex-col items-start gap-2 flex-1 -mt-4 lg:-mt-8">
-                        <Editable translationKey="hero_welcome">
-                            <TypewriterEffectSmooth words={welcomeWords} className="mb-2" cursorClassName="bg-blue-500" />
-                        </Editable>
+                    <div className="flex flex-col items-start gap-0 md:gap-2 flex-1 -mt-4 lg:-mt-8 w-full">
+                        {/* Welcome - Order 1 */}
+                        <div className="order-1">
+                            <Editable translationKey="hero_welcome">
+                                <TypewriterEffectSmooth words={welcomeWords} className="mb-2" cursorClassName="bg-blue-500" />
+                            </Editable>
+                        </div>
 
-                        <Editable translationKey="hero_title">
-                            <h1 className="max-w-3xl text-left text-3xl font-black leading-[1.1] tracking-tighter text-white sm:text-5xl md:text-6xl drop-shadow-2xl font-outfit uppercase">
-                                <ShinyText
-                                    text={title}
-                                    speed={1.9}
-                                    color="#ffffff80"
-                                    shineColor="#ffffff"
-                                    className="leading-[1.1]"
-                                />
-                            </h1>
-                        </Editable>
+                        {/* Title - Order 2 */}
+                        <div className="order-2 w-full">
+                            <Editable translationKey="hero_title">
+                                <h1 className="max-w-3xl text-left text-3xl font-black leading-[1.1] tracking-tighter text-white sm:text-5xl md:text-6xl drop-shadow-2xl font-outfit uppercase">
+                                    <ShinyText
+                                        text={title}
+                                        speed={1.9}
+                                        color="#ffffff80"
+                                        shineColor="#ffffff"
+                                        className="leading-[1.1]"
+                                    />
+                                </h1>
+                            </Editable>
+                        </div>
 
-                        <Editable translationKey="hero_description" className="w-full">
-                            <p className="max-w-xl text-left text-lg font-medium leading-relaxed text-white/90 drop-shadow-lg opacity-80">
-                                {description}
-                            </p>
-                        </Editable>
+                        {/* Mobile Profile Card - Order 3 (Visible only on mobile) */}
+                        <div className="order-3 lg:hidden w-full flex justify-center mt-12 mb-8">
+                            <ProfileCard />
+                        </div>
 
-                        <div className="flex flex-wrap items-center gap-4 pt-6">
+                        {/* Description - Order 4 */}
+                        <div className="order-4 mt-6 md:mt-0">
+                            <Editable translationKey="hero_description" className="w-full">
+                                <p className="max-w-xl text-left text-lg font-medium leading-relaxed text-white/90 drop-shadow-lg opacity-80">
+                                    {description}
+                                </p>
+                            </Editable>
+                        </div>
+
+                        {/* Buttons - Order 5 */}
+                        <div className="order-5 flex flex-wrap items-center gap-4 pt-6">
                             {ctaButtons.map((btn, i) => (
                                 <a
                                     key={i}
@@ -149,7 +164,8 @@ export default function PremiumHero({
                             ))}
                         </div>
 
-                        <div className="mt-20 w-full lg:max-w-2xl">
+                        {/* Skills - Order 6 */}
+                        <div className="order-6 mt-12 md:mt-20 w-full lg:max-w-2xl">
                             <div className="flex justify-start mb-8">
                                 {isAdmin && (
                                     <button
@@ -179,7 +195,8 @@ export default function PremiumHero({
                         </div>
                     </div>
 
-                    <div className="flex-shrink-0 lg:mt-0 mt-12 -mt-4 lg:-mt-8">
+                    {/* Desktop Profile Card (Visible only on desktop) */}
+                    <div className="hidden lg:block flex-shrink-0 lg:mt-0 mt-12 -mt-4 lg:-mt-8">
                         <ProfileCard />
                     </div>
                 </div>
