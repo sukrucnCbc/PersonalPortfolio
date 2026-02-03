@@ -22,7 +22,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Şükrücan Cebeci | Senior Data Analyst & AI Developer",
+  title: "Şükrücan Cebeci - Portfolio & Blog",
   description: "Senior Data Analyst | Artificial Intelligence Developer",
   icons: {
     icon: [
