@@ -1,76 +1,15 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { Canvas, useFrame, extend } from '@react-three/fiber';
-import { shaderMaterial } from '@react-three/drei';
-import * as THREE from 'three';
+import dynamic from 'next/dynamic';
 import { ProfileCard } from './profile-card';
 import { TypewriterEffectSmooth } from './typewriter-effect';
 import { Editable } from './pencil-edit';
 import { useLanguage } from '@/components/language-context';
 import ShinyText from './shiny-text';
 
-// ===================== SHADER =====================
-const vertexShader = `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = vec4(position, 1.0);
-  }
-`;
+// Import the heavy background without SSR
+const HeroBackground = dynamic(() => import('./hero-background'), { ssr: false });
 
-const fragmentShader = `
-  precision highp float;
-  uniform float iTime;
-  uniform vec2 iResolution;
-  varying vec2 vUv;
-
-  void main() {
-    vec2 uv = (vUv * 2.0 - 1.0);
-    uv.x *= iResolution.x / iResolution.y;
-
-    float t = iTime * 0.2;
-    
-    vec3 color = vec3(0.0);
-    for(float i = 1.0; i < 4.0; i++){
-        uv.x += 0.6 / i * sin(i * 3.0 * uv.y + t);
-        uv.y += 0.6 / i * cos(i * 3.0 * uv.x + t);
-        color += 0.1 / length(uv) * vec3(
-            sin(t + i), 
-            cos(t + i * 2.0), 
-            sin(t + i * 3.0)
-        );
-    }
-    color *= 1.5;
-    gl_FragColor = vec4(color, 1.0);
-  }
-`;
-
-const FlowMaterial = shaderMaterial(
-    { iTime: 0, iResolution: new THREE.Vector2(1, 1) },
-    vertexShader,
-    fragmentShader
-);
-
-extend({ FlowMaterial });
-
-function ShaderPlane() {
-    const materialRef = useRef<any>(null!);
-    useFrame((state) => {
-        if (materialRef.current) {
-            materialRef.current.iTime = state.clock.elapsedTime;
-            materialRef.current.iResolution.set(state.size.width, state.size.height);
-        }
-    });
-    return (
-        <mesh>
-            <planeGeometry args={[2, 2]} />
-            <flowMaterial ref={materialRef} />
-        </mesh>
-    );
-}
-
-// ===================== HERO =====================
 interface HeroProps {
     title: string;
     description: string;
@@ -103,21 +42,19 @@ export default function PremiumHero({
 
     return (
         <div lang={language} className="relative min-h-screen w-full flex items-start justify-start overflow-hidden bg-black pt-32 pb-20 md:pt-40 font-outfit">
-            <div className="absolute inset-0 z-0">
-                <Canvas camera={{ position: [0, 0, 1] }}>
-                    <ShaderPlane />
-                </Canvas>
-            </div>
+            <HeroBackground />
 
             <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-16 pointer-events-none">
                 <div className="flex flex-col lg:flex-row items-start justify-between gap-16 pointer-events-auto">
                     <div className="flex flex-col items-start gap-0 md:gap-2 flex-1 -mt-4 lg:-mt-8 w-full">
                         {/* Welcome - Order 1 */}
-                        <div className="order-1">
-                            <Editable translationKey="hero_welcome">
-                                <TypewriterEffectSmooth words={welcomeWords} className="mb-2" cursorClassName="bg-blue-500" />
-                            </Editable>
-                        </div>
+                        {welcomeWords.length > 0 && (
+                            <div className="order-1">
+                                <Editable translationKey="hero_welcome">
+                                    <TypewriterEffectSmooth words={welcomeWords} className="mb-2" cursorClassName="bg-blue-500" />
+                                </Editable>
+                            </div>
+                        )}
 
                         {/* Title - Order 2 */}
                         <div className="order-2 w-full">
@@ -206,10 +143,4 @@ export default function PremiumHero({
             <div className="absolute inset-x-0 bottom-0 h-24 backdrop-blur-[1px] z-[4] pointer-events-none" />
         </div>
     );
-}
-
-declare module '@react-three/fiber' {
-    interface ThreeElements {
-        flowMaterial: any;
-    }
 }

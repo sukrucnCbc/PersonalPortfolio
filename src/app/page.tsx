@@ -16,10 +16,10 @@ import MagicBento from "@/components/ui/magic-bento";
 import Aurora from "@/components/ui/Aurora";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import PremiumHero from "@/components/ui/premium-hero";
 
 const ExperienceTimeline = dynamic(() => import("@/components/ui/experience-timeline").then(mod => mod.ExperienceTimeline), { ssr: true });
 const EducationTimeline = dynamic(() => import("@/components/ui/education-timeline").then(mod => mod.EducationTimeline), { ssr: true });
-const PremiumHero = dynamic(() => import("@/components/ui/premium-hero"), { ssr: false });
 
 function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t: any }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,11 +44,9 @@ function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t:
             className="w-full h-full object-cover transition-all duration-700 scale-100 group-hover:scale-115"
             alt={ach.title}
           />
-          {/* Inner Light Radiance */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:to-blue-500/30 transition-all duration-500" />
         </div>
 
-        <div className="flex-1 flex flex-col relative z-10 min-w-0">
+        <div className="flex-1 flex flex-col relative z-20 min-w-0">
           <div className="flex items-center justify-between w-full">
             <h3 className="text-sm md:text-xl font-black outfit uppercase tracking-normal text-white group-hover:text-blue-400 transition-colors truncate pr-2">
               {ach.title}
