@@ -137,23 +137,24 @@ export default function Home() {
   React.useEffect(() => {
     // Hide scrollbar during loading
     document.body.style.overflow = "hidden";
+    const startTime = Date.now();
 
     const handleLoad = () => {
-      // Delay slightly for visual comfort
+      const elapsedTime = Date.now() - startTime;
+      const minDuration = 5200; // Slightly more than 5s to ensure a full rotation and smooth exit
+      const remainingTime = Math.max(0, minDuration - elapsedTime);
+
       setTimeout(() => {
         setIsLoading(false);
         document.body.style.overflow = "auto";
-      }, 1000);
+      }, remainingTime);
     };
-
-    // Safety timeout in case load event takes too long
-    const safetyTimer = setTimeout(handleLoad, 4000);
 
     if (document.readyState === "complete") {
       handleLoad();
-      clearTimeout(safetyTimer);
     } else {
       window.addEventListener("load", handleLoad);
+      const safetyTimer = setTimeout(handleLoad, 10000); // 10s safety max
       return () => {
         window.removeEventListener("load", handleLoad);
         clearTimeout(safetyTimer);
@@ -217,7 +218,7 @@ export default function Home() {
             exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
             className="fixed inset-0 z-[9999]"
           >
-            <AILoader text={language === 'tr' ? 'HAZIRLANIYOR' : 'PREPARING'} />
+            <AILoader text="GENERATING DATA" />
           </motion.div>
         )}
       </AnimatePresence>
