@@ -9,12 +9,14 @@ import { Editable } from "@/components/ui/pencil-edit";
 import { AdminLogin } from "@/components/admin-login";
 
 import { useState } from "react";
+import React from "react"; // Added React import for useEffect
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Box, Zap, Mail, Linkedin, ChevronRight } from "lucide-react";
 import { FlashlightEffect, StageLight } from "@/components/ui/flashlight-effect";
 import MagicBento from "@/components/ui/magic-bento";
 import Aurora from "@/components/ui/Aurora";
 import Image from "next/image";
+import { AILoader } from "@/components/ui/ai-loader";
 import dynamic from "next/dynamic";
 import PremiumHero from "@/components/ui/premium-hero";
 
@@ -130,6 +132,25 @@ const FloatSection = ({ children, id, className = "" }: { children: React.ReactN
 export default function Home() {
   const { t, language, addItem, removeItem, isAdmin } = useLanguage();
   const [selectedBlog, setSelectedBlog] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    // Hide scrollbar during loading
+    if (isLoading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isLoading]);
+
+  React.useEffect(() => {
+    // Minimum loading time for the animation to be seen
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const blogsData = t("blog_list");
   const blogs = Array.isArray(blogsData)
@@ -179,6 +200,19 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen bg-black">
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <motion.div
+            key="loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+            className="fixed inset-0 z-[9999]"
+          >
+            <AILoader text={language === 'tr' ? 'HAZIRLANIYOR' : 'PREPARING'} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Navbar />
 
       <main>
@@ -727,6 +761,6 @@ export default function Home() {
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_0%,transparent_70%)] pointer-events-none" />
         </footer>
       </main>
-    </div>
+    </div >
   );
 }
