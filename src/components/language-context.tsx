@@ -28,7 +28,7 @@ const translations = {
         social: {
             linkedin: "",
             github: "",
-            email: ""
+            email: "hi@sukrucancebeci.com"
         },
         about_badge: "HAKKIMDA",
         about_title: "Veriye Duyulan Merak, Analizle Gelen Çözüm",
@@ -75,7 +75,7 @@ const translations = {
         social: {
             linkedin: "",
             github: "",
-            email: ""
+            email: "hi@sukrucancebeci.com"
         },
         about_badge: "ABOUT ME",
         about_title: "Curiosity for Data, Solution through Analysis",
