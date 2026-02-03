@@ -94,7 +94,7 @@ export function ProfileCard({ onLoad }: { onLoad?: () => void }) {
                                 priority
                                 sizes="192px"
                                 className="object-cover transition-all duration-700"
-                                onLoadingComplete={() => {
+                                onLoad={() => {
                                     if (onLoad) onLoad();
                                 }}
                             />

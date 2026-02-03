@@ -135,36 +135,41 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [profileImageLoaded, setProfileImageLoaded] = useState(false);
   const loadStartTime = React.useRef(Date.now());
+  const hasTriggeredHide = React.useRef(false);
 
   React.useEffect(() => {
     // Hide scrollbar during loading
     document.body.style.overflow = "hidden";
   }, []);
 
+  const handleHideLoader = React.useCallback(() => {
+    if (hasTriggeredHide.current) return;
+    hasTriggeredHide.current = true;
+
+    const elapsedTime = Date.now() - loadStartTime.current;
+    const minDuration = 2000; // Minimum 2 seconds
+    const remainingTime = Math.max(0, minDuration - elapsedTime);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      document.body.style.overflow = "auto";
+    }, remainingTime);
+  }, []);
+
   React.useEffect(() => {
-    // Wait for profile image AND minimum 2 seconds
+    // Wait for profile image to load
     if (profileImageLoaded) {
-      const elapsedTime = Date.now() - loadStartTime.current;
-      const minDuration = 2000; // Minimum 2 seconds
-      const remainingTime = Math.max(0, minDuration - elapsedTime);
-
-      setTimeout(() => {
-        setIsLoading(false);
-        document.body.style.overflow = "auto";
-      }, remainingTime);
+      handleHideLoader();
     }
-  }, [profileImageLoaded]);
+  }, [profileImageLoaded, handleHideLoader]);
 
-  // Safety timeout in case image never loads
+  // Safety timeout in case image never loads (8 seconds max)
   React.useEffect(() => {
     const safetyTimer = setTimeout(() => {
-      if (isLoading) {
-        setIsLoading(false);
-        document.body.style.overflow = "auto";
-      }
-    }, 10000);
+      handleHideLoader();
+    }, 8000);
     return () => clearTimeout(safetyTimer);
-  }, [isLoading]);
+  }, [handleHideLoader]);
 
   const blogsData = t("blog_list");
   const blogs = Array.isArray(blogsData)
