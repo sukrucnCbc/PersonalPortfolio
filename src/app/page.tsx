@@ -136,20 +136,29 @@ export default function Home() {
 
   React.useEffect(() => {
     // Hide scrollbar during loading
-    if (isLoading) {
-      document.body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    const handleLoad = () => {
+      // Delay slightly for visual comfort
+      setTimeout(() => {
+        setIsLoading(false);
+        document.body.style.overflow = "auto";
+      }, 1000);
+    };
+
+    // Safety timeout in case load event takes too long
+    const safetyTimer = setTimeout(handleLoad, 4000);
+
+    if (document.readyState === "complete") {
+      handleLoad();
+      clearTimeout(safetyTimer);
     } else {
-      document.body.style.overflow = "auto";
+      window.addEventListener("load", handleLoad);
+      return () => {
+        window.removeEventListener("load", handleLoad);
+        clearTimeout(safetyTimer);
+      };
     }
-  }, [isLoading]);
-
-  React.useEffect(() => {
-    // Minimum loading time for the animation to be seen
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
-
-    return () => clearTimeout(timer);
   }, []);
 
   const blogsData = t("blog_list");
