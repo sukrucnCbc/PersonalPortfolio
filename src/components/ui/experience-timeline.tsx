@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronRight, Calendar, Briefcase, Info, Wrench } from "lucide-react";
+import Image from "next/image";
 import { Editable } from "@/components/ui/pencil-edit";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -276,9 +277,10 @@ export function ExperienceTimeline() {
                                                             <div className="mb-5">
                                                                 <div className="relative w-10 h-10 flex items-center justify-center">
                                                                     <div className="absolute inset-0 bg-blue-500/5 blur-[12px] rounded-full" />
-                                                                    <img
+                                                                    <Image
                                                                         src={exp.logo}
-                                                                        className="relative z-10 w-full h-full object-contain filter drop-shadow-xl opacity-80"
+                                                                        fill
+                                                                        className="relative z-10 object-contain filter drop-shadow-xl opacity-80"
                                                                         alt={exp.company}
                                                                     />
                                                                 </div>
@@ -352,9 +354,10 @@ export function ExperienceTimeline() {
                                                     {/* Background Spotlight Glow */}
                                                     <div className="absolute inset-0 bg-blue-500/5 blur-[25px] rounded-full group-hover/card:bg-blue-500/15 transition-all duration-700" />
 
-                                                    <img
+                                                    <Image
                                                         src={currentExperience.logo}
-                                                        className="relative z-10 w-full h-full object-contain filter drop-shadow-2xl opacity-50 group-hover/card:opacity-100 group-hover/card:scale-110 transition-all duration-700"
+                                                        fill
+                                                        className="relative z-10 object-contain filter drop-shadow-2xl opacity-50 group-hover/card:opacity-100 group-hover/card:scale-110 transition-all duration-700"
                                                         alt={currentExperience.company}
                                                     />
                                                 </div>

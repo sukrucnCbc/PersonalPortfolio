@@ -42,10 +42,12 @@ export function StripeCard({
                     className='absolute top-0 left-0 w-full h-full group-hover:opacity-40 opacity-0 transition-all duration-300 z-10'
                 ></div>
                 <div className='relative w-full h-full'>
-                    <img
+                    <Image
                         src={image}
                         alt={title}
-                        className='absolute -bottom-2 group-hover:-bottom-6 right-0 h-48 w-[90%] group-hover:border-4 border-2 border-white/10 group-hover:border-white/20 rounded-2xl object-cover transition-all duration-500 shadow-2xl z-20'
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className='absolute -bottom-2 group-hover:-bottom-6 right-0 group-hover:border-4 border-2 border-white/10 group-hover:border-white/20 rounded-2xl object-cover transition-all duration-500 shadow-2xl z-20'
                     />
                 </div>
             </figure>

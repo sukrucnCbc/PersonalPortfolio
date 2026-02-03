@@ -1,16 +1,12 @@
 "use client";
 
-import PremiumHero from "@/components/ui/premium-hero";
 import { Navbar } from "@/components/navbar";
 import { useLanguage } from "@/components/language-context";
 import { StripeCard } from "@/components/ui/stripe-card";
-import { ExperienceTimeline } from "@/components/ui/experience-timeline";
-import { EducationTimeline } from "@/components/ui/education-timeline";
 import { HeartbeatDivider } from "@/components/ui/heartbeat-divider";
 import { Threads } from "@/components/ui/threads";
 import { Editable } from "@/components/ui/pencil-edit";
 import { AdminLogin } from "@/components/admin-login";
-
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,25 +14,33 @@ import { X, Box, Zap, Mail, Linkedin, ChevronRight } from "lucide-react";
 import { FlashlightEffect, StageLight } from "@/components/ui/flashlight-effect";
 import MagicBento from "@/components/ui/magic-bento";
 import Aurora from "@/components/ui/Aurora";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const ExperienceTimeline = dynamic(() => import("@/components/ui/experience-timeline").then(mod => mod.ExperienceTimeline), { ssr: true });
+const EducationTimeline = dynamic(() => import("@/components/ui/education-timeline").then(mod => mod.EducationTimeline), { ssr: true });
+const PremiumHero = dynamic(() => import("@/components/ui/premium-hero"), { ssr: false });
 
 function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t: any }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative">
-      {/* Desktop View & Mobile Header */}
-      <div
-        className={`liquid-glass p-4 md:p-8 rounded-[2rem] border border-white/5 hover:border-blue-500/30 transition-all group relative overflow-hidden flex flex-row items-center gap-4 md:gap-6 cursor-pointer md:cursor-default shadow-lg hover:shadow-blue-500/5`}
-        onClick={() => {
-          if (window.innerWidth < 768) setIsOpen(!isOpen);
-        }}
-      >
+    <div
+      className={`liquid-glass transition-all duration-500 group relative overflow-hidden flex flex-col cursor-pointer md:cursor-default shadow-lg hover:shadow-blue-500/5 rounded-[2rem] border border-white/5 hover:border-blue-500/30
+        ${isOpen ? "bg-blue-500/[0.03]" : ""}`}
+      onClick={() => {
+        if (window.innerWidth < 768) setIsOpen(!isOpen);
+      }}
+    >
+      <div className="p-4 md:p-8 flex flex-row items-center gap-4 md:gap-6 w-full relative z-10">
         {/* Glow effect on hover */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full pointer-events-none group-hover:bg-blue-500/15 transition-all" />
 
-        <div className="flex-shrink-0 w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-zinc-900 border border-white/10 overflow-hidden group-hover:border-blue-500/40 transition-all relative shadow-2xl z-10">
-          <img
+        <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-zinc-900 border border-white/10 overflow-hidden group-hover:border-blue-500/40 transition-all relative shadow-2xl z-20">
+          <Image
             src={ach.image || "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=100&q=80"}
+            width={64}
+            height={64}
             className="w-full h-full object-cover transition-all duration-700 scale-100 group-hover:scale-115"
             alt={ach.title}
           />
@@ -46,14 +50,14 @@ function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t:
 
         <div className="flex-1 flex flex-col relative z-10 min-w-0">
           <div className="flex items-center justify-between w-full">
-            <h3 className="text-[12px] md:text-xl font-black outfit uppercase tracking-normal text-white group-hover:text-blue-400 transition-colors truncate pr-2">
+            <h3 className="text-sm md:text-xl font-black outfit uppercase tracking-normal text-white group-hover:text-blue-400 transition-colors truncate pr-2">
               {ach.title}
             </h3>
 
             {/* Mobile Toggle Arrow */}
             <motion.div
               animate={{ rotate: isOpen ? 90 : 0 }}
-              className="md:hidden w-8 h-8 flex items-center justify-center bg-white/5 rounded-full text-blue-400 border border-white/10"
+              className="md:hidden w-8 h-8 flex items-center justify-center bg-white/10 rounded-full text-blue-400 border border-white/10 flex-shrink-0"
             >
               <ChevronRight size={14} />
             </motion.div>
@@ -87,7 +91,7 @@ function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t:
             exit={{ height: 0, opacity: 0 }}
             className="md:hidden overflow-hidden"
           >
-            <div className="p-6 pt-2 border-x border-b border-white/5 rounded-b-[2rem] bg-white/[0.01] relative z-0 -mt-4">
+            <div className="px-6 pb-6 pt-0 relative z-20">
               <Editable
                 translationKey={`achievements_list.${ach.id}`}
                 fields={[
@@ -97,7 +101,8 @@ function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t:
                 ]}
                 onDelete={() => removeItem("achievements_list", ach._originalIndex)}
               >
-                <p className="text-sm text-white/50 leading-relaxed font-medium">
+                <div className="h-[1px] w-full bg-white/5 mb-4" />
+                <p className="text-sm text-white/70 leading-relaxed font-medium">
                   {ach.desc}
                 </p>
               </Editable>
@@ -110,7 +115,7 @@ function AchievementCard({ ach, removeItem, t }: { ach: any; removeItem: any; t:
 }
 
 
-// Scroll Float Effect Wrapper - ANIMATIONS DISABLED FOR STABILITY
+// Scroll Float Effect Wrapper
 const FloatSection = ({ children, id, className = "" }: { children: React.ReactNode, id?: string, className?: string }) => {
   return (
     <section
@@ -195,7 +200,7 @@ export default function Home() {
           />
         </section>
 
-        <FloatSection id="career" className="">
+        <FloatSection id="career">
           <div className="container mx-auto px-4 pb-8">
             <ExperienceTimeline />
           </div>
@@ -203,7 +208,7 @@ export default function Home() {
 
         <HeartbeatDivider />
 
-        <FloatSection id="education" className="">
+        <FloatSection id="education">
           <div className="container mx-auto px-4 py-8">
             <EducationTimeline />
           </div>
@@ -334,7 +339,7 @@ export default function Home() {
                   fields={blogFields}
                   onDelete={() => removeItem("blog_list", blog._originalIndex)}
                 >
-                  <div onClick={() => setSelectedBlog(blog)}>
+                  <div onClick={() => setSelectedBlog(blog)} className="cursor-pointer">
                     <StripeCard
                       title={blog.title}
                       categoryName={blog.category}
@@ -375,7 +380,7 @@ export default function Home() {
 
                 {selectedBlog.image && (
                   <div className="w-full h-[400px] relative">
-                    <img src={selectedBlog.image} className="w-full h-full object-cover" alt="" />
+                    <Image src={selectedBlog.image} fill className="object-cover" alt="" />
                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
                   </div>
                 )}
@@ -435,10 +440,12 @@ export default function Home() {
                 <div className="w-full max-w-[320px] aspect-[4/5] relative group">
                   <div className="absolute inset-0 bg-blue-600/20 blur-[80px] rounded-full group-hover:bg-blue-600/40 transition-all duration-1000 opacity-50" />
                   <div className="relative w-full h-full rounded-[2.5rem] border border-white/10 overflow-hidden glass p-3 transform group-hover:scale-[1.02] group-hover:-rotate-1 transition-all duration-700 shadow-3xl">
-                    <div className="w-full h-full rounded-[1.8rem] overflow-hidden bg-zinc-900 border border-white/5 relative">
+                    <div className="relative w-full h-full rounded-[1.8rem] overflow-hidden bg-zinc-900 border border-white/5 relative">
                       <Editable translationKey="about_image" type="image">
-                        <img
+                        <Image
                           src={t("about_image")}
+                          width={400}
+                          height={500}
                           className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
                           alt={t("profile_card.name")}
                         />
@@ -446,7 +453,7 @@ export default function Home() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
                     </div>
                   </div>
-                  {/* Outer Floating Element for extra "class" */}
+                  {/* Outer Floating Element */}
                   <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-blue-500/10 backdrop-blur-xl border border-white/10 rounded-3xl -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700" />
                 </div>
               </div>
@@ -496,8 +503,6 @@ export default function Home() {
                   glowColor="59, 130, 246"
                 />
               </div>
-
-
             </div>
           </div>
         </FloatSection>
@@ -555,8 +560,6 @@ export default function Home() {
               <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.1)_0%,transparent_70%)] pointer-events-none" />
 
               <div className="relative z-10 text-center flex flex-col items-center">
-                {/* Removed Let's Work Together badge */}
-
                 <Editable translationKey="contact_title">
                   <h2 className="text-4xl md:text-7xl font-black outfit uppercase tracking-tighter leading-[0.9] mb-8 text-white">
                     {t("contact_title")}

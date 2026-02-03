@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Linkedin, User, Copy, Check } from "lucide-react";
+import Image from "next/image";
 import { useLanguage } from "../language-context";
 import { Editable } from "./pencil-edit";
 
@@ -85,11 +86,14 @@ export function ProfileCard() {
                         />
 
                         {/* Profile Photo Area */}
-                        <div className="mx-auto mb-8 h-48 w-48 overflow-hidden rounded-[2.5rem] border-4 border-white/20 shadow-2xl group-hover:scale-105 transition-all duration-700 bg-zinc-800">
-                            <img
+                        <div className="mx-auto mb-8 h-48 w-48 overflow-hidden rounded-[2.5rem] border-4 border-white/20 shadow-2xl group-hover:scale-105 transition-all duration-700 bg-zinc-800 relative">
+                            <Image
                                 src={profile.image}
                                 alt="Profile"
-                                className="h-full w-full object-cover transition-all duration-700"
+                                fill
+                                priority
+                                sizes="192px"
+                                className="object-cover transition-all duration-700"
                             />
                         </div>
 
