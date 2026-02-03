@@ -17,6 +17,7 @@ interface HeroProps {
     ctaButtons?: Array<{ text: string; href: string; primary?: boolean }>;
     microDetails?: Array<string>;
     language?: string;
+    onProfileImageLoad?: () => void;
 }
 
 export default function PremiumHero({
@@ -25,7 +26,8 @@ export default function PremiumHero({
     ctaButtons: propsCtaButtons = [],
     microDetails: propsMicroDetails = [],
     language,
-    badgeText
+    badgeText,
+    onProfileImageLoad
 }: HeroProps) {
     const { addItem, removeItem, t, isAdmin } = useLanguage();
 
@@ -73,7 +75,7 @@ export default function PremiumHero({
 
                         {/* Mobile Profile Card - Order 3 (Visible only on mobile) */}
                         <div className="order-3 lg:hidden w-full flex justify-center mt-12 mb-8">
-                            <ProfileCard />
+                            <ProfileCard onLoad={onProfileImageLoad} />
                         </div>
 
                         {/* Description - Order 4 */}
@@ -134,7 +136,7 @@ export default function PremiumHero({
 
                     {/* Desktop Profile Card (Visible only on desktop) */}
                     <div className="hidden lg:block flex-shrink-0 lg:mt-0 mt-12 -mt-4 lg:-mt-8">
-                        <ProfileCard />
+                        <ProfileCard onLoad={onProfileImageLoad} />
                     </div>
                 </div>
             </div>

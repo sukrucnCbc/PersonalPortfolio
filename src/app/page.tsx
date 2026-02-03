@@ -133,14 +133,18 @@ export default function Home() {
   const { t, language, addItem, removeItem, isAdmin } = useLanguage();
   const [selectedBlog, setSelectedBlog] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profileImageLoaded, setProfileImageLoaded] = useState(false);
+  const loadStartTime = React.useRef(Date.now());
 
   React.useEffect(() => {
     // Hide scrollbar during loading
     document.body.style.overflow = "hidden";
-    const startTime = Date.now();
+  }, []);
 
-    const handleLoad = () => {
-      const elapsedTime = Date.now() - startTime;
+  React.useEffect(() => {
+    // Wait for profile image AND minimum 2 seconds
+    if (profileImageLoaded) {
+      const elapsedTime = Date.now() - loadStartTime.current;
       const minDuration = 2000; // Minimum 2 seconds
       const remainingTime = Math.max(0, minDuration - elapsedTime);
 
@@ -148,19 +152,19 @@ export default function Home() {
         setIsLoading(false);
         document.body.style.overflow = "auto";
       }, remainingTime);
-    };
-
-    if (document.readyState === "complete") {
-      handleLoad();
-    } else {
-      window.addEventListener("load", handleLoad);
-      const safetyTimer = setTimeout(handleLoad, 10000); // 10s safety max
-      return () => {
-        window.removeEventListener("load", handleLoad);
-        clearTimeout(safetyTimer);
-      };
     }
-  }, []);
+  }, [profileImageLoaded]);
+
+  // Safety timeout in case image never loads
+  React.useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      if (isLoading) {
+        setIsLoading(false);
+        document.body.style.overflow = "auto";
+      }
+    }, 10000);
+    return () => clearTimeout(safetyTimer);
+  }, [isLoading]);
 
   const blogsData = t("blog_list");
   const blogs = Array.isArray(blogsData)
@@ -239,6 +243,7 @@ export default function Home() {
             ]}
             microDetails={t("skills")}
             language={language}
+            onProfileImageLoad={() => setProfileImageLoaded(true)}
           />
         </section>
 

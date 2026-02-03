@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useLanguage } from "../language-context";
 import { Editable } from "./pencil-edit";
 
-export function ProfileCard() {
+export function ProfileCard({ onLoad }: { onLoad?: () => void }) {
     const { t, language } = useLanguage();
     const x = useMotionValue(0);
     const y = useMotionValue(0);
@@ -94,6 +94,9 @@ export function ProfileCard() {
                                 priority
                                 sizes="192px"
                                 className="object-cover transition-all duration-700"
+                                onLoadingComplete={() => {
+                                    if (onLoad) onLoad();
+                                }}
                             />
                         </div>
 
