@@ -235,7 +235,14 @@ export default function Home() {
       <Navbar />
 
       <main>
-        <section id="home" className="relative">
+        <section
+          id="home"
+          className="relative"
+          style={{
+            opacity: isLoading ? 0 : 1,
+            transition: 'opacity 0.5s ease-in-out'
+          }}
+        >
           <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-black to-transparent z-[5] pointer-events-none opacity-40" />
           <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-black to-transparent z-[5] pointer-events-none opacity-40" />
           <PremiumHero
