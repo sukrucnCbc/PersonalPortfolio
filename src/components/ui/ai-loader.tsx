@@ -3,37 +3,37 @@
 import * as React from "react";
 
 interface LoaderProps {
-    size?: number;
-    text?: string;
+  size?: number;
+  text?: string;
 }
 
-export const AILoader: React.FC<LoaderProps> = ({ size = 180, text = "GENERATING DATA" }) => {
-    const letters = text.split("");
+export const AILoader: React.FC<LoaderProps> = ({ size = 220, text = "GENERATING DATA" }) => {
+  const letters = text.split("");
 
-    return (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-gradient-to-b from-[#1a3379] via-[#0f172a] to-black">
-            <div
-                className="relative flex items-center justify-center font-inter select-none"
-                style={{ width: size, height: size }}
+  return (
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-gradient-to-b from-[#1a3379] via-[#0f172a] to-black">
+      <div
+        className="relative flex items-center justify-center font-inter select-none"
+        style={{ width: size, height: size }}
+      >
+        <div className="flex gap-0.5">
+          {letters.map((letter, index) => (
+            <span
+              key={index}
+              className="inline-block text-white opacity-40 animate-loaderLetter whitespace-pre text-[11px] font-bold tracking-widest"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-                <div className="flex gap-0.5">
-                    {letters.map((letter, index) => (
-                        <span
-                            key={index}
-                            className="inline-block text-white opacity-40 animate-loaderLetter whitespace-pre"
-                            style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                            {letter}
-                        </span>
-                    ))}
-                </div>
+              {letter}
+            </span>
+          ))}
+        </div>
 
-                <div
-                    className="absolute inset-0 rounded-full animate-loaderCircle"
-                ></div>
-            </div>
+        <div
+          className="absolute inset-0 rounded-full animate-loaderCircle"
+        ></div>
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         @keyframes loaderCircle {
           0% {
             transform: rotate(90deg);
@@ -88,6 +88,6 @@ export const AILoader: React.FC<LoaderProps> = ({ size = 180, text = "GENERATING
           animation: loaderLetter 3s infinite;
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };

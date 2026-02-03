@@ -141,7 +141,7 @@ export default function Home() {
 
     const handleLoad = () => {
       const elapsedTime = Date.now() - startTime;
-      const minDuration = 5200; // Slightly more than 5s to ensure a full rotation and smooth exit
+      const minDuration = 2000; // Minimum 2 seconds
       const remainingTime = Math.max(0, minDuration - elapsedTime);
 
       setTimeout(() => {
