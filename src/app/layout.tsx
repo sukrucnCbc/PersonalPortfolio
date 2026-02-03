@@ -22,8 +22,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Şükrücan Cebeci - Portfolio & Blog",
-  description: "Modern portfolio built with Next.js and 21st.dev",
+  title: "Şükrücan Cebeci | Senior Data Analyst & AI Developer",
+  description: "Senior Data Analyst | Artificial Intelligence Developer",
   icons: {
     icon: [
       { url: "/favicon.png" },
