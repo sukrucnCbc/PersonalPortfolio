@@ -24,7 +24,20 @@ const translations = {
         projects_title: "Projeler",
         projects_content: "<ul><li>Önemli Proje 1</li></ul>",
         achievements_title: "Başarılar",
-        achievements_list: [],
+        achievements_list: [
+            {
+                id: "google-ai-scholar",
+                title: "GOOGLE AI SCHOLAR",
+                description: "Google Yapay Zeka Bursiyeri - Google Yapay Zeka ve Teknoloji Akademisi - Google Burs Programı kapsamında seçilen 1500 bursiyerden biri (2026).",
+                icon: "🎓"
+            },
+            {
+                id: "mckinsey-forward",
+                title: "MCKİNSEY FORWARD PROGRAM",
+                description: "McKinsey tarafından dünya genelinde sınırlı sayıda genç profesyonelin kabul edildiği Forward programına seçilerek; stratejik düşünme, problem çözme ve etkili iletişim gibi temel iş dünyası becerilerini geliştirmeyi amaçlayan, kapsamlı eğitim sürecini başarıyla tamamladım.",
+                icon: "💼"
+            }
+        ],
         social: {
             linkedin: "",
             github: "",
@@ -71,7 +84,20 @@ const translations = {
         projects_title: "Projects",
         projects_content: "<ul><li>Major Project 1</li></ul>",
         achievements_title: "Achievements",
-        achievements_list: [],
+        achievements_list: [
+            {
+                id: "google-ai-scholar",
+                title: "GOOGLE AI SCHOLAR",
+                description: "Google Artificial Intelligence and Technology Academy - 2026 scholar",
+                icon: "🎓"
+            },
+            {
+                id: "mckinsey-forward",
+                title: "MCKINSEY FORWARD PROGRAM",
+                description: "Strategy, problem solving and communication skills development program",
+                icon: "💼"
+            }
+        ],
         social: {
             linkedin: "",
             github: "",
