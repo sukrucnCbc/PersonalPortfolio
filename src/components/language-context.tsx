@@ -47,6 +47,11 @@ const translations = {
         about_title: "Veriye Duyulan Merak, Analizle Gelen Çözüm",
         about_image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=800&q=80",
         about_text: "Yüksek doğruluk odaklı bir Veri Analisti olarak, karmaşık süreçleri daha hassas ve işlevsel hale getiren veri odaklı çözümler geliştiriyorum.",
+        profile_card: {
+            name: "Şükrücan Cebeci",
+            role: "Senior Data Analyst",
+            image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=800&q=80"
+        },
         contact_title: "Verilerinizi birlikte inceleyelim.",
         contact_subtitle: "Bir projeniz mi var? Bir kahve eşliğinde analiz yapmaya ne dersiniz?",
         contact_btn: "Analize Başlayalım",
@@ -107,6 +112,11 @@ const translations = {
         about_title: "Curiosity for Data, Solution through Analysis",
         about_image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=800&q=80",
         about_text: "As a high-accuracy Data Analyst, I develop data-driven solutions that make complex processes more precise and functional.",
+        profile_card: {
+            name: "Şükrücan Cebeci",
+            role: "Senior Data Analyst",
+            image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=800&q=80"
+        },
         contact_title: "Let's examine your data together.",
         contact_subtitle: "Have a project? How about an analysis over a cup of coffee?",
         contact_btn: "Start Analysis",
@@ -138,6 +148,7 @@ interface LanguageContextType {
     removeItem: (arrayKey: string, index: number) => Promise<void>;
     anyPopupOpen: boolean;
     setAnyPopupOpen: (val: boolean) => void;
+    isLoaded: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -145,6 +156,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguage] = useState<Language>("tr");
     const [content, setContent] = useState<any>(null);
+    const [isLoaded, setIsLoaded] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [anyPopupOpen, setAnyPopupOpen] = useState(false);
     const contentRef = React.useRef<any>(null);
@@ -163,8 +175,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             .then(data => {
                 setContent(data);
                 contentRef.current = data;
+                setIsLoaded(true);
             })
-            .catch(err => console.error("Failed to fetch content:", err));
+            .catch(err => {
+                console.error("Failed to fetch content:", err);
+                setIsLoaded(true); // Still set to true to unblock loader on error
+            });
     }, []);
 
     useEffect(() => {
@@ -386,7 +402,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             setAnyPopupOpen,
             addItem,
             removeItem,
-            updateContent
+            updateContent,
+            isLoaded
         }}>
             {children}
         </LanguageContext.Provider>

@@ -130,7 +130,7 @@ const FloatSection = ({ children, id, className = "" }: { children: React.ReactN
 };
 
 export default function Home() {
-  const { t, language, addItem, removeItem, isAdmin } = useLanguage();
+  const { t, language, addItem, removeItem, isAdmin, isLoaded } = useLanguage();
   const [selectedBlog, setSelectedBlog] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [profileImageLoaded, setProfileImageLoaded] = useState(false);
@@ -157,11 +157,11 @@ export default function Home() {
   }, []);
 
   React.useEffect(() => {
-    // Wait for profile image to load
-    if (profileImageLoaded) {
+    // Wait for both profile image to load and dynamic content to be ready
+    if (profileImageLoaded && isLoaded) {
       handleHideLoader();
     }
-  }, [profileImageLoaded, handleHideLoader]);
+  }, [profileImageLoaded, isLoaded, handleHideLoader]);
 
   // Safety timeout in case image never loads (8 seconds max)
   React.useEffect(() => {
