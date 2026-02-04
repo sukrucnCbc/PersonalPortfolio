@@ -11,7 +11,7 @@ import { AdminLogin } from "@/components/admin-login";
 import { useState } from "react";
 import React from "react"; // Added React import for useEffect
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Box, Zap, Mail, Linkedin, ChevronRight } from "lucide-react";
+import { X, Box, Zap, Mail, Linkedin, ChevronRight, Database, Code2, BarChart3, PieChart, FileSpreadsheet, LineChart, Cpu, Brain, Search, Eye, Users } from "lucide-react";
 import { FlashlightEffect, StageLight } from "@/components/ui/flashlight-effect";
 import MagicBento from "@/components/ui/magic-bento";
 import Aurora from "@/components/ui/Aurora";
@@ -545,22 +545,43 @@ export default function Home() {
               </div>
 
               <div className="relative z-10">
-                <MagicBento
-                  data={toolboxSkills.map(skill => ({
-                    title: skill.name,
-                    color: "rgba(255, 255, 255, 0.01)"
-                  }))}
-                  textAutoHide={false}
-                  enableStars
-                  enableSpotlight
-                  enableBorderGlow={true}
-                  enableTilt={true}
-                  enableMagnetism={true}
-                  clickEffect
-                  spotlightRadius={400}
-                  particleCount={8}
-                  glowColor="59, 130, 246"
-                />
+                {(() => {
+                  const getIcon = (name: string) => {
+                    const n = name.toUpperCase();
+                    if (n.includes('SQL')) return <Database size={18} />;
+                    if (n.includes('PYTHON')) return <Code2 size={18} />;
+                    if (n.includes('TABLEAU')) return <BarChart3 size={18} />;
+                    if (n.includes('POWER BI')) return <PieChart size={18} />;
+                    if (n.includes('EXCEL')) return <FileSpreadsheet size={18} />;
+                    if (n.includes('İSTATİSTİK') || n.includes('STATISTIC')) return <LineChart size={18} />;
+                    if (n.includes('MAKİNE') || n.includes('MACHINE')) return <Cpu size={18} />;
+                    if (n.includes('ZEKA') || n.includes('AI') || n.includes('ARTIFICIAL')) return <Brain size={18} />;
+                    if (n.includes('BIGQUERY')) return <Search size={18} />;
+                    if (n.includes('LOOKER')) return <Eye size={18} />;
+                    if (n.includes('CRM') || n.includes('ANALİTİĞİ')) return <Users size={18} />;
+                    return <Box size={18} />;
+                  };
+
+                  return (
+                    <MagicBento
+                      data={toolboxSkills.map(skill => ({
+                        title: skill.name,
+                        icon: getIcon(skill.name),
+                        color: "rgba(255, 255, 255, 0.01)"
+                      }))}
+                      textAutoHide={false}
+                      enableStars
+                      enableSpotlight
+                      enableBorderGlow={true}
+                      enableTilt={true}
+                      enableMagnetism={true}
+                      clickEffect
+                      spotlightRadius={400}
+                      particleCount={8}
+                      glowColor="59, 130, 246"
+                    />
+                  );
+                })()}
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ export interface BentoCardProps {
     title?: string;
     description?: string;
     label?: string;
+    icon?: React.ReactNode;
     textAutoHide?: boolean;
     disableAnimations?: boolean;
 }
@@ -535,6 +536,7 @@ const MagicBento: React.FC<BentoProps> = ({
                                     </div>
                                 )}
                                 <div className="magic-bento-card__content">
+                                    {card.icon && <div className="magic-bento-card__icon">{card.icon}</div>}
                                     <h2 className="magic-bento-card__title">{card.title}</h2>
                                     {card.description && <p className="magic-bento-card__description">{card.description}</p>}
                                 </div>
@@ -660,6 +662,7 @@ const MagicBento: React.FC<BentoProps> = ({
                                 </div>
                             )}
                             <div className="magic-bento-card__content">
+                                {card.icon && <div className="magic-bento-card__icon">{card.icon}</div>}
                                 <h2 className="magic-bento-card__title">{card.title}</h2>
                                 {card.description && <p className="magic-bento-card__description">{card.description}</p>}
                             </div>
